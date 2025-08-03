@@ -1,4 +1,5 @@
 // backend/src/users/user.entity.ts
+import * as bcrypt from 'bcrypt';
 import { Note } from '../notes/note.entity';
 import { Category } from '../categories/category.entity';
 import { Exclude } from 'class-transformer';
@@ -9,6 +10,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  BeforeInsert,
 } from 'typeorm';
 
 @Entity('users') // This will create a 'users' table
@@ -22,9 +24,8 @@ export class User {
   @Column()
   username: string;
 
-  // !! todo: Hash passwords
-  @Column()
   @Exclude()
+  @Column()
   password: string;
 
   @CreateDateColumn({ name: 'created_at' })
@@ -39,4 +40,11 @@ export class User {
 
   @OneToMany(() => Category, (category) => category.user)
   categories: Category[];
+
+  // This method will hash the password before saving the user to the database
+  @BeforeInsert()
+  async hashPassword() {
+    const saltRounds = 10;
+    this.password = await bcrypt.hash(this.password, saltRounds);
+  }
 }
