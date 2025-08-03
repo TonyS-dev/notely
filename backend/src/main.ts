@@ -1,18 +1,22 @@
 // backend/src/main.ts
-import { NestFactory } from '@nestjs/core';
+
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { TypeOrmExceptionFilter } from './common/filters/typeorm-exception.filter';
+import { ClassSerializerInterceptor } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Apply the filter globally
   app.useGlobalFilters(new TypeOrmExceptionFilter());
+
+  // Used to handle serialization globally
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   await app.listen(process.env.PORT || 3000);
 }
 
-bootstrap().catch((error) => {
-  console.error('Application failed to start:', error);
+bootstrap().catch((err) => {
+  console.error('Application failed to start:', err);
   process.exit(1);
 });

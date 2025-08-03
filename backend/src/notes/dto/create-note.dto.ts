@@ -20,8 +20,4 @@ export class CreateNoteDto {
   @IsUUID('4', { each: true })
   @IsOptional()
   categoryIds?: string[];
-
-  @IsUUID()
-  @IsNotEmpty()
-  userId: string; // The ID of the user creating the note
 }

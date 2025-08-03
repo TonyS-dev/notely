@@ -13,11 +13,13 @@ export class CategoriesService {
   ) {}
 
   // Create method to add a new category
-  create(createCategoryDto: CreateCategoryDto): Promise<Category> {
-    const { userId, ...rest } = createCategoryDto;
+  create(
+    createCategoryDto: CreateCategoryDto,
+    userId: string,
+  ): Promise<Category> {
     const newCategory = this.categoriesRepository.create({
-      ...rest,
-      user: { id: userId }, // Create the link to the user
+      ...createCategoryDto,
+      user: { id: userId }, // Link to the user ID provided by the controller
     });
     return this.categoriesRepository.save(newCategory);
   }

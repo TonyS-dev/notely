@@ -1,14 +1,25 @@
-import { Controller, Post, Body, ValidationPipe } from '@nestjs/common'; // <-- Add ValidationPipe
+// backend/src/users/users.controller.ts
+import {
+  Controller,
+  Post,
+  Body,
+  ValidationPipe,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto'; // <-- 1. Import the DTO
+import { CreateUserDto } from './dto/create-user.dto';
+import { User } from './user.entity';
 
 @Controller('users')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  // Use the DTO and a ValidationPipe for automatic validation
-  create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+  create(
+    @Body(new ValidationPipe()) createUserDto: CreateUserDto,
+  ): Promise<User> {
     return this.usersService.create(createUserDto);
   }
 }
