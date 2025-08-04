@@ -7,6 +7,19 @@ export interface DecodedToken {
   exp: number;
 }
 
+export interface ModalContextType {
+  openCreateNoteModal: () => void;
+  openEditNoteModal: (note: Note) => void;
+  closeModal: () => void;
+}
+
+export interface NotesContextType {
+  notes: Note[];
+  isLoading: boolean;
+  error: string | null;
+  refetchNotes: () => void;
+}
+
 export interface AuthContextType {
   user: User | null;
   token: string | null;

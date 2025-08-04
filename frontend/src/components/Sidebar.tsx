@@ -1,9 +1,11 @@
 // frontend/src/components/Sidebar.tsx
 import type { SidebarProps } from '../types';
+import { useModal } from '../hooks/useModal';
 
 // !TODO: add more props like the user's name and email
 
 export const Sidebar = ({ user, onLogout }: SidebarProps) => {
+  const { openCreateNoteModal } = useModal();
   return (
     <aside className="sidebar">
       <div className="user-profile">
@@ -19,7 +21,9 @@ export const Sidebar = ({ user, onLogout }: SidebarProps) => {
         </div>
       </div>
 
-      <button className="new-note">+ New note</button>
+      <button className="new-note" onClick={openCreateNoteModal}>
+        + New note
+      </button>
 
       <nav className="sidebar-nav">
         <div className="nav-item">
