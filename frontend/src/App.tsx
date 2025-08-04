@@ -15,7 +15,14 @@ function App() {
   const handleShowNotes = () => setShowArchived(false);
 
   const MainAppLayout = () => (
-    <div style={{ display: 'flex', height: '100vh', background: '#f8f9fa' }}>
+    <div
+      style={{
+        display: 'flex',
+        height: '100vh',
+        width: '70vw',
+        background: '#f8f9fa',
+      }}
+    >
       <Sidebar
         user={user}
         onLogout={logout}
