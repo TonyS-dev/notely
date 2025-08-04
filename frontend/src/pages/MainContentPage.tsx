@@ -12,6 +12,7 @@ export function MainContentPage({ showArchived }: { showArchived: boolean }) {
     error,
     handleDuplicate,
     handleArchive,
+    handleUnarchive,
     handleDelete,
   } = useNotesContext();
   const sortedNotes = useSortedNotes(
@@ -66,7 +67,9 @@ export function MainContentPage({ showArchived }: { showArchived: boolean }) {
                   onEdit={() => openEditNoteModal(note)}
                   onDuplicate={() => handleDuplicate(note)}
                   onArchive={() => handleArchive(note)}
+                  onUnarchive={() => handleUnarchive(note)}
                   onDelete={() => handleDelete(note)}
+                  isArchived={!note.isActive}
                 />
               ))
             ) : (

@@ -21,6 +21,7 @@ export interface NotesContextType {
   handleDuplicate: (note: Note) => Promise<void>;
   handleArchive: (note: Note) => Promise<void>;
   handleDelete: (note: Note) => Promise<void>;
+  handleUnarchive: (note: Note) => Promise<void>;
 }
 
 export interface AuthContextType {
@@ -78,7 +79,9 @@ export interface NoteItemProps {
   onEdit: (note: Note) => void;
   onDuplicate: (note: Note) => void;
   onArchive: (note: Note) => void;
+  onUnarchive?: (note: Note) => void;
   onDelete: (note: Note) => void;
+  isArchived?: boolean;
 }
 
 export interface NoteModalProps {
@@ -99,5 +102,7 @@ export interface SidebarProps {
 export interface DropdownMenuProps {
   onDuplicate: () => void;
   onArchive: () => void;
+  onUnarchive?: () => void;
   onDelete: () => void;
+  isArchived?: boolean;
 }

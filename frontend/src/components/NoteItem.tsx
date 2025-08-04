@@ -8,7 +8,9 @@ export const NoteItem = ({
   onEdit,
   onDuplicate,
   onArchive,
+  onUnarchive,
   onDelete,
+  isArchived,
 }: NoteItemProps) => {
   const formattedDate = new Date(note.createdAt).toLocaleDateString();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -48,7 +50,9 @@ export const NoteItem = ({
           <DropdownMenu
             onDuplicate={() => onDuplicate(note)}
             onArchive={() => onArchive(note)}
+            onUnarchive={onUnarchive ? () => onUnarchive(note) : undefined}
             onDelete={() => onDelete(note)}
+            isArchived={isArchived}
           />
         </div>
       </div>

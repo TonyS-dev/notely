@@ -21,12 +21,17 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
     await api.deleteNote(note.id);
     notesData.refetchNotes();
   };
+  const handleUnarchive: NotesContextType['handleUnarchive'] = async (note) => {
+    await api.unarchiveNote(note.id);
+    notesData.refetchNotes();
+  };
 
   const value = {
     ...notesData,
     handleDuplicate,
     handleArchive,
     handleDelete,
+    handleUnarchive,
   };
 
   return (

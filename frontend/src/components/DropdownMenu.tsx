@@ -4,7 +4,9 @@ import type { DropdownMenuProps } from '../types';
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   onDuplicate,
   onArchive,
+  onUnarchive,
   onDelete,
+  isArchived,
 }) => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -37,9 +39,15 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
           <button className="dropdown-item" onClick={onDuplicate}>
             📋 Duplicate
           </button>
-          <button className="dropdown-item" onClick={onArchive}>
-            📁 Archive
-          </button>
+          {isArchived ? (
+            <button className="dropdown-item" onClick={onUnarchive}>
+              ♻️ Unarchive
+            </button>
+          ) : (
+            <button className="dropdown-item" onClick={onArchive}>
+              📁 Archive
+            </button>
+          )}
           <button className="dropdown-item danger" onClick={onDelete}>
             🗑️ Delete
           </button>
