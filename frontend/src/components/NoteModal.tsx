@@ -4,6 +4,7 @@ import type { FormEvent } from 'react';
 import * as api from '../api/apiClient';
 import type { NoteModalProps } from '../types';
 import { AxiosError } from 'axios';
+import { CategorySelector } from './CategorySelector';
 
 // NoteModal component for creating and editing notes
 export const NoteModal = ({
@@ -15,7 +16,7 @@ export const NoteModal = ({
   // Internal state for the form fields
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  // !TODO: add categories later
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
 
   // State for handling loading and API errors
   const [isLoading, setIsLoading] = useState(false);
@@ -31,9 +32,11 @@ export const NoteModal = ({
       if (isEditMode) {
         setTitle(noteToEdit.title);
         setContent(noteToEdit.content);
+        setSelectedCategoryIds(noteToEdit.categories.map((cat) => cat.id));
       } else {
         setTitle('');
         setContent('');
+        setSelectedCategoryIds([]);
       }
       // Reset error state whenever the modal is opened
       setError('');
@@ -53,7 +56,7 @@ export const NoteModal = ({
     }
 
     try {
-      const noteData = { title, content }; // !TODO: Add categoryIds here later
+      const noteData = { title, content, categoryIds: selectedCategoryIds };
 
       if (isEditMode) {
         // --- UPDATE LOGIC ---
@@ -123,16 +126,10 @@ export const NoteModal = ({
             ></textarea>
           </div>
 
-          {/* !TODO: implement the category selection UI */}
-          <div className="form-group">
-            <label>Categories</label>
-            <div className="category-input-group">
-              <input type="text" placeholder="Add a category..." disabled />
-              <button type="button" className="add-category-btn" disabled>
-                Add
-              </button>
-            </div>
-          </div>
+          <CategorySelector
+            selectedCategoryIds={selectedCategoryIds}
+            onCategoriesChange={setSelectedCategoryIds}
+          />
 
           {error && (
             <p

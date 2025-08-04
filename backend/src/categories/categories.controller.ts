@@ -6,6 +6,7 @@ import {
   ValidationPipe,
   UseGuards,
   Request,
+  Get,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CategoriesService } from './categories.service';
@@ -22,11 +23,20 @@ interface AuthenticatedRequest extends ExpressRequest {
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
+  // Create a new category
   @Post()
-  create(
+  @UseGuards(JwtAuthGuard)
+  async create(
     @Request() req: AuthenticatedRequest,
     @Body(new ValidationPipe()) createCategoryDto: CreateCategoryDto,
   ) {
     return this.categoriesService.create(createCategoryDto, req.user.userId);
+  }
+
+  // Get all categories for the current user
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async findAll(@Request() req: AuthenticatedRequest) {
+    return this.categoriesService.findAllForUser(req.user.userId);
   }
 }

@@ -64,7 +64,7 @@ export interface Note {
 
 export interface CreateNoteData {
   title: string;
-  content: string;
+  content?: string;
   categoryIds?: string[];
 }
 
@@ -79,7 +79,7 @@ export interface NoteItemProps {
   onEdit: (note: Note) => void;
   onDuplicate: (note: Note) => void;
   onArchive: (note: Note) => void;
-  onUnarchive?: (note: Note) => void;
+  onUnarchive: (note: Note) => void;
   onDelete: (note: Note) => void;
   isArchived?: boolean;
 }
@@ -102,7 +102,7 @@ export interface SidebarProps {
 export interface DropdownMenuProps {
   onDuplicate: () => void;
   onArchive: () => void;
-  onUnarchive?: () => void;
+  onUnarchive: () => void;
   onDelete: () => void;
-  isArchived?: boolean;
+  isArchived: boolean;
 }

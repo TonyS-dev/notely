@@ -29,16 +29,29 @@ apiClient.interceptors.request.use(
 
 // Interceptor to handle 401 Unauthorized errors
 apiClient.interceptors.response.use(
+  // On success, just return the response
   (response) => response,
+  // On error, handle it globally
   (error) => {
+    const originalRequest = error.config;
+
+    // Check for 401 Unauthorized error AND ensure it's not a retry AND it's not the login page
     if (
-      error.response &&
-      (error.response.status === 401 || error.response.status === 403)
+      error.response?.status === 401 &&
+      originalRequest.url !== '/auth/login'
     ) {
-      // Handle unauthorized access
+      console.error(
+        'Session expired or token is invalid. Redirecting to login.',
+      );
+      // This is where you would trigger a global logout
+      // Forcing a page reload to the root is a simple way to do it.
       localStorage.removeItem('accessToken');
-      window.location.reload(); // This will reset the app and AuthProvider will log out the user
+      window.location.href = '/';
+      // Important: Return a new promise to prevent the original caller's .catch from firing
+      return new Promise(() => {});
     }
+
+    // For all other errors (including 401 on the login page), just pass them along
     return Promise.reject(error);
   },
 );

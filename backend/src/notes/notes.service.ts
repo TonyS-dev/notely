@@ -26,33 +26,27 @@ export class NotesService {
 
     let categories: Category[] = [];
     if (categoryIds && categoryIds.length > 0) {
-      // Find all categories that match the provided IDs
+      // Find all categories that match the provided IDs and belong to the user
       categories = await this.categoriesRepository.find({
-        where: { id: In(categoryIds) },
-        relations: {
-          user: true,
+        where: {
+          id: In(categoryIds),
+          user: { id: userId },
         },
+        relations: ['user'],
       });
-
-      // Security Check: Ensure every found category belongs to the user
-      for (const category of categories) {
-        if (category.user.id !== userId) {
-          throw new ForbiddenException(
-            `Category with ID "${category.id}" does not belong to the current user.`,
-          );
-        }
-      }
 
       // Check if any provided category IDs were not found
       if (categories.length !== categoryIds.length) {
-        throw new NotFoundException('One or more categories were not found.');
+        throw new NotFoundException(
+          'One or more categories were not found or do not belong to the current user.',
+        );
       }
     }
 
     const note = this.notesRepository.create({
       ...restOfDto,
       user: { id: userId },
-      categories: categories, // Assign the full category objects
+      categories: categories,
     });
 
     return this.notesRepository.save(note);
@@ -102,10 +96,31 @@ export class NotesService {
     userId: string,
   ): Promise<Note> {
     // Ensure the note exists and belongs to the user
-    // This will throw a 404 error if the user doesn't own it.
     const existingNote = await this.findOneByIdAndOwner(id, userId);
 
-    // We merge the existing note with the new data from the DTO.
+    // Handle category updates if categoryIds are provided
+    if (updateNoteDto.categoryIds) {
+      // Find all categories that match the provided IDs
+      const categories = await this.categoriesRepository.find({
+        where: { id: In(updateNoteDto.categoryIds) },
+        relations: ['user'],
+      });
+
+      // Security Check: Ensure every found category belongs to the user
+      for (const category of categories) {
+        if (category.user.id !== userId) {
+          throw new ForbiddenException(
+            `Category with ID "${category.id}" does not belong to the current user.`,
+          );
+        }
+      }
+
+      // Update the note with the new categories
+      existingNote.categories = categories;
+      delete updateNoteDto.categoryIds; // Remove from DTO as it was handled it separately
+    }
+
+    // Merge the remaining properties from the DTO
     const updatedNote = this.notesRepository.merge(existingNote, updateNoteDto);
 
     return this.notesRepository.save(updatedNote);

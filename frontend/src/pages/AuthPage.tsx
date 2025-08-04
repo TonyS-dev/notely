@@ -30,7 +30,7 @@ export function AuthPage({ onLoginSuccess }: AuthPageProps) {
     // A helper function to create user-friendly error messages
     const parseErrorMessage = (serverMessage: string): string => {
       if (serverMessage.includes('Key (email)')) {
-        return 'An account with this email already exists. Please try to sign in.';
+        return 'An account with this email already exists.';
       }
       if (serverMessage.includes('Key (username)')) {
         return 'This username is already taken. Please choose another.';

@@ -13,14 +13,21 @@ export class CategoriesService {
   ) {}
 
   // Create method to add a new category
-  create(
+  async create(
     createCategoryDto: CreateCategoryDto,
     userId: string,
   ): Promise<Category> {
     const newCategory = this.categoriesRepository.create({
       ...createCategoryDto,
-      user: { id: userId }, // Link to the user ID provided by the controller
+      user: { id: userId },
     });
     return this.categoriesRepository.save(newCategory);
+  }
+
+  // Find all categories for a user
+  async findAllForUser(userId: string): Promise<Category[]> {
+    return this.categoriesRepository.find({
+      where: { user: { id: userId } },
+    });
   }
 }

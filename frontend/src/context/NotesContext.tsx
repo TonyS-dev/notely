@@ -17,12 +17,12 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
     await api.archiveNote(note.id);
     notesData.refetchNotes();
   };
-  const handleDelete: NotesContextType['handleDelete'] = async (note) => {
-    await api.deleteNote(note.id);
-    notesData.refetchNotes();
-  };
   const handleUnarchive: NotesContextType['handleUnarchive'] = async (note) => {
     await api.unarchiveNote(note.id);
+    notesData.refetchNotes();
+  };
+  const handleDelete: NotesContextType['handleDelete'] = async (note) => {
+    await api.deleteNote(note.id);
     notesData.refetchNotes();
   };
 
@@ -30,8 +30,8 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
     ...notesData,
     handleDuplicate,
     handleArchive,
-    handleDelete,
     handleUnarchive,
+    handleDelete,
   };
 
   return (
