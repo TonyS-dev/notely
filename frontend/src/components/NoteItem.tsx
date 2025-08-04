@@ -1,8 +1,37 @@
 // frontend/src/components/NoteItem.tsx
 import type { NoteItemProps } from '../types';
+import { useRef, useState, useEffect } from 'react';
+import { DropdownMenu } from './DropdownMenu';
 
-export const NoteItem = ({ note, onEdit }: NoteItemProps) => {
+export const NoteItem = ({
+  note,
+  onEdit,
+  onDuplicate,
+  onArchive,
+  onDelete,
+}: NoteItemProps) => {
   const formattedDate = new Date(note.createdAt).toLocaleDateString();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   return (
     <div className="note-item">
@@ -16,9 +45,11 @@ export const NoteItem = ({ note, onEdit }: NoteItemProps) => {
           >
             ✏️
           </button>
-          <button className="note-action-btn" title="More">
-            ⋯
-          </button>
+          <DropdownMenu
+            onDuplicate={() => onDuplicate(note)}
+            onArchive={() => onArchive(note)}
+            onDelete={() => onDelete(note)}
+          />
         </div>
       </div>
       <h3 className="note-title">{note.title}</h3>

@@ -39,6 +39,11 @@ export class NotesController {
     return this.notesService.create(createNoteDto, req.user.userId);
   }
 
+  @Post('/duplicate/:id')
+  duplicate(@Request() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.notesService.duplicate(id, req.user.userId);
+  }
+
   @Get('/active')
   findAllActive(@Request() req: AuthenticatedRequest) {
     return this.notesService.findAllActive(req.user.userId);

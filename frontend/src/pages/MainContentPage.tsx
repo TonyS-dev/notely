@@ -2,11 +2,21 @@
 import { NoteItem } from '../components/NoteItem';
 import { useModal } from '../hooks/useModal';
 import { useNotesContext } from '../hooks/useNotesContext';
+import { useSortedNotes } from '../hooks/useSortedNotes';
 
-export function MainContentPage() {
+export function MainContentPage({ showArchived }: { showArchived: boolean }) {
   const { openEditNoteModal } = useModal();
-  const { notes, isLoading, error } = useNotesContext(); // This effect runs once when the component mounts
-
+  const {
+    notes,
+    isLoading,
+    error,
+    handleDuplicate,
+    handleArchive,
+    handleDelete,
+  } = useNotesContext();
+  const sortedNotes = useSortedNotes(
+    notes.filter((note) => (showArchived ? !note.isActive : note.isActive)),
+  );
   if (isLoading) {
     return (
       <main className="main-content">
@@ -46,20 +56,24 @@ export function MainContentPage() {
       </header>
       <section className="dashboard">
         <div className="notes-section">
-          <h2>My notes</h2>
+          <h2>{showArchived ? 'Archived notes' : 'My notes'}</h2>
           <div className="notes-list">
-            {notes.length > 0 ? (
-              notes.map((note) => (
+            {sortedNotes.length > 0 ? (
+              sortedNotes.map((note) => (
                 <NoteItem
                   key={note.id}
                   note={note}
                   onEdit={() => openEditNoteModal(note)}
+                  onDuplicate={() => handleDuplicate(note)}
+                  onArchive={() => handleArchive(note)}
+                  onDelete={() => handleDelete(note)}
                 />
               ))
             ) : (
               <p>
-                You have no active notes. Click "+ New note" in the sidebar to
-                create one!
+                {showArchived
+                  ? 'No archived notes.'
+                  : 'You have no active notes. Click "+ New note" in the sidebar to create one!'}
               </p>
             )}
           </div>

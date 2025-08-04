@@ -58,6 +58,21 @@ export class NotesService {
     return this.notesRepository.save(note);
   }
 
+  async duplicate(id: string, userId: string): Promise<Note> {
+    // Find the note to duplicate
+    const noteToDuplicate = await this.findOneByIdAndOwner(id, userId);
+    // Create a new note with the same properties, but without the ID
+    const newNote = this.notesRepository.create({
+      title: `Copy of ${noteToDuplicate.title}`,
+      content: noteToDuplicate.content,
+      isActive: noteToDuplicate.isActive,
+      categories: noteToDuplicate.categories, // Reuse the same categories
+      user: { id: userId }, // Ensure the new note belongs to the same user
+    });
+    // Save the new note
+    return this.notesRepository.save(newNote);
+  }
+
   // Find all active notes
   findAllActive(userId: string): Promise<Note[]> {
     // Filter notes by user ID and active status

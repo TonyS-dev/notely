@@ -43,6 +43,9 @@ export const getArchivedNotes = () => apiClient.get('/notes/archived');
 export const createNote = (noteData: CreateNoteData) =>
   apiClient.post('/notes', noteData);
 
+export const duplicateNote = (noteId: string) =>
+  apiClient.post(`/notes/duplicate/${noteId}`);
+
 export const updateNote = (noteId: string, noteData: UpdateNoteData) =>
   apiClient.put(`/notes/${noteId}`, noteData);
 

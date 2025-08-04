@@ -18,6 +18,9 @@ export interface NotesContextType {
   isLoading: boolean;
   error: string | null;
   refetchNotes: () => void;
+  handleDuplicate: (note: Note) => Promise<void>;
+  handleArchive: (note: Note) => Promise<void>;
+  handleDelete: (note: Note) => Promise<void>;
 }
 
 export interface AuthContextType {
@@ -73,6 +76,9 @@ export interface UpdateNoteData {
 export interface NoteItemProps {
   note: Note;
   onEdit: (note: Note) => void;
+  onDuplicate: (note: Note) => void;
+  onArchive: (note: Note) => void;
+  onDelete: (note: Note) => void;
 }
 
 export interface NoteModalProps {
@@ -85,4 +91,12 @@ export interface NoteModalProps {
 export interface SidebarProps {
   user: User | null;
   onLogout: () => void;
+  onShowArchived: () => void;
+  onShowNotes: () => void;
+}
+
+export interface DropdownMenuProps {
+  onDuplicate: () => void;
+  onArchive: () => void;
+  onDelete: () => void;
 }

@@ -4,7 +4,12 @@ import { useModal } from '../hooks/useModal';
 
 // !TODO: add more props like the user's name and email
 
-export const Sidebar = ({ user, onLogout }: SidebarProps) => {
+export const Sidebar = ({
+  user,
+  onLogout,
+  onShowArchived,
+  onShowNotes,
+}: SidebarProps) => {
   const { openCreateNoteModal } = useModal();
   return (
     <aside className="sidebar">
@@ -27,10 +32,14 @@ export const Sidebar = ({ user, onLogout }: SidebarProps) => {
 
       <nav className="sidebar-nav">
         <div className="nav-item">
-          <button className="nav-btn active">📝 Notes</button>
+          <button className="nav-btn" onClick={onShowNotes}>
+            📝 Notes
+          </button>
         </div>
         <div className="nav-item">
-          <button className="nav-btn">📂 Archived</button>
+          <button className="nav-btn" onClick={onShowArchived}>
+            📂 Archived
+          </button>
         </div>
       </nav>
       <div className="sidebar-footer">

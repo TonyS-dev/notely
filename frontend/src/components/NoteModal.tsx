@@ -1,5 +1,4 @@
 // frontend/src/components/NoteModal.tsx
-
 import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import * as api from '../api/apiClient';

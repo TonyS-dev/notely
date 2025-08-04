@@ -20,6 +20,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         // Check if token is expired
         if (Date.now() >= decodedUser.exp * 1000) {
+          logout();
           throw new Error('Token expired');
         }
 
