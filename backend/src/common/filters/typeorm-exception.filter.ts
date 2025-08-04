@@ -20,7 +20,7 @@ export class TypeOrmExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>(); // Use Response type for better typing
 
-    // Cast the driverError to our new interface
+    // Cast the driverError to the new interface
     const driverError = exception.driverError as unknown as PostgresError;
 
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;

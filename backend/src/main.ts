@@ -10,6 +10,8 @@ async function bootstrap() {
 
   app.useGlobalFilters(new TypeOrmExceptionFilter());
 
+  // Enable CORS for all origins
+  app.enableCors();
   // Used to handle serialization globally
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
