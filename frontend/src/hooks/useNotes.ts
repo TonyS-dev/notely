@@ -20,8 +20,15 @@ export const useNotes = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await api.getActiveNotes();
-      setNotes(response.data);
+      const [activeNotesResponse, archivedNotesResponse] = await Promise.all([
+        api.getActiveNotes(),
+        api.getArchivedNotes(),
+      ]);
+      const allNotes = [
+        ...activeNotesResponse.data,
+        ...archivedNotesResponse.data,
+      ];
+      setNotes(allNotes);
     } catch (err) {
       setError('Failed to fetch notes.');
       console.error(err);

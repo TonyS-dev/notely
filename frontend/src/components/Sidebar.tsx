@@ -9,6 +9,7 @@ export const Sidebar = ({
   onLogout,
   onShowArchived,
   onShowNotes,
+  showArchived,
 }: SidebarProps) => {
   const { openCreateNoteModal } = useModal();
   return (
@@ -32,12 +33,18 @@ export const Sidebar = ({
 
       <nav className="sidebar-nav">
         <div className="nav-item">
-          <button className="nav-btn" onClick={onShowNotes}>
+          <button
+            className={`nav-btn ${!showArchived ? 'active' : ''}`}
+            onClick={onShowNotes}
+          >
             📝 Notes
           </button>
         </div>
         <div className="nav-item">
-          <button className="nav-btn" onClick={onShowArchived}>
+          <button
+            className={`nav-btn ${showArchived ? 'active' : ''}`}
+            onClick={onShowArchived}
+          >
             📂 Archived
           </button>
         </div>

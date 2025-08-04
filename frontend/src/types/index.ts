@@ -93,6 +93,7 @@ export interface SidebarProps {
   onLogout: () => void;
   onShowArchived: () => void;
   onShowNotes: () => void;
+  showArchived: boolean;
 }
 
 export interface DropdownMenuProps {

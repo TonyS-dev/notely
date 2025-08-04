@@ -21,6 +21,7 @@ function App() {
         onLogout={logout}
         onShowArchived={handleShowArchived}
         onShowNotes={handleShowNotes}
+        showArchived={showArchived}
       />
       <MainContentPage showArchived={showArchived} />
     </div>
