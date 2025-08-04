@@ -28,7 +28,7 @@ function App() {
   );
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${!isAuthenticated ? 'auth-view' : ''}`}>
       {/* 
         - If not authenticated, show AuthPage and give it the 'login' function from our context.
         - If authenticated, show the main app layout.
