@@ -32,7 +32,7 @@ export function MainContent() {
       </header>
       <section className="dashboard">
         <div className="notes-section">
-          <h2>My notes</h2>
+          <h2>📝 My notes</h2>
           <div className="notes-list">
             {/* Map over the notes and render a NoteItem component for each */}
             {notes.map((note) => (

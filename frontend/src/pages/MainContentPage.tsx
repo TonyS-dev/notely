@@ -26,7 +26,7 @@ export function MainContentPage({ showArchived }: { showArchived: boolean }) {
         </header>
         <section className="dashboard">
           <div className="notes-section">
-            <h2>My notes</h2>
+            <h2>📝 My notes</h2>
             <div className="loading-state">Loading Notes...</div>
           </div>
         </section>
@@ -42,7 +42,7 @@ export function MainContentPage({ showArchived }: { showArchived: boolean }) {
         </header>
         <section className="dashboard">
           <div className="notes-section">
-            <h2>My notes</h2>
+            <h2>📝 My notes</h2>
             <div className="error-state">{error}</div>
           </div>
         </section>
@@ -57,7 +57,7 @@ export function MainContentPage({ showArchived }: { showArchived: boolean }) {
       </header>
       <section className="dashboard">
         <div className="notes-section">
-          <h2>{showArchived ? 'Archived notes' : 'My notes'}</h2>
+          <h2>{showArchived ? 'Archived notes' : '📝 My notes'}</h2>
           <div className="notes-list">
             {sortedNotes.length > 0 ? (
               sortedNotes.map((note) => (
