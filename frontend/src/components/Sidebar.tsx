@@ -50,7 +50,7 @@ export const Sidebar = ({
         </div>
       </nav>
       <div className="sidebar-footer">
-        <button className="about-btn" onClick={onLogout}>
+        <button className="logout-btn" onClick={onLogout}>
           Logout
         </button>
       </div>

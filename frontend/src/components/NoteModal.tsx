@@ -17,6 +17,7 @@ export const NoteModal = ({
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
+  const [isClosing, setIsClosing] = useState(false);
 
   // State for handling loading and API errors
   const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +43,18 @@ export const NoteModal = ({
       setError('');
     }
   }, [isOpen, noteToEdit, isEditMode]);
+
+  const handleClose = () => {
+    if (isClosing) return; // Prevent running multiple times
+
+    setIsClosing(true); // Trigger the closing animation class
+
+    // Wait for the animation to finish before calling the parent's onClose
+    setTimeout(() => {
+      onClose(); // This actually removes the modal
+      setIsClosing(false); // Reset state for the next time it opens
+    }, 280);
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -89,14 +102,17 @@ export const NoteModal = ({
 
   // Render the modal with a form for creating or editing a note
   return (
-    <div className="modal-overlay active" onClick={onClose}>
+    <div className="modal-overlay active" onClick={handleClose}>
       {/* e.stopPropagation() prevents clicks inside the modal from closing it */}
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        className={`modal-content ${isClosing ? 'closing' : ''}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="modal-header">
           <h3 id="modalTitle">
             {isEditMode ? 'Edit Note' : 'Create New Note'}
           </h3>
-          <button className="modal-close" onClick={onClose}>
+          <button className="modal-close" onClick={handleClose}>
             ×
           </button>
         </div>
@@ -147,7 +163,7 @@ export const NoteModal = ({
             <button
               type="button"
               className="btn-secondary"
-              onClick={onClose}
+              onClick={handleClose}
               disabled={isLoading}
             >
               Cancel

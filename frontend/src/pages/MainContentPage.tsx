@@ -68,7 +68,7 @@ export function MainContentPage({ showArchived }: { showArchived: boolean }) {
       </header>
       <section className="dashboard">
         <div className="notes-section">
-          <h2>{showArchived ? 'Archived notes' : '📝 My notes'}</h2>
+          <h2>{showArchived ? '📁 Archived notes' : '📝 My notes'}</h2>
           {!showArchived && (
             <CategoryFilter
               selectedCategoryId={selectedCategoryId}
