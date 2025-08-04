@@ -37,7 +37,7 @@ apiClient.interceptors.response.use(
     ) {
       // Handle unauthorized access
       localStorage.removeItem('accessToken');
-      window.location.href = '/login';
+      window.location.reload(); // This will reset the app and AuthProvider will log out the user
     }
     return Promise.reject(error);
   },

@@ -467,7 +467,7 @@
 }
 
 /* Dropdown Menu */
-.note-dropdown {
+.dropdown-menu {
   position: absolute;
   top: 100%;
   right: 0;
@@ -477,14 +477,11 @@
   box-shadow: var(--shadow-lg);
   z-index: 100;
   min-width: 150px;
-  opacity: 0;
-  visibility: hidden;
   transform: translateY(-10px);
   transition: all 0.3s ease;
-  overflow: hidden;
 }
 
-.note-dropdown.active {
+.dropdown-menu.active {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
