@@ -4,7 +4,7 @@ A modern, full-featured RESTful backend for managing notes, users, and categorie
 
 ---
 
-## 📋 About me
+## 📋 About Me
 
 - **Name:** Antonio Santiago
 - **Email:** santiagor.acarlos@gmail.com
@@ -40,14 +40,18 @@ npm run test:e2e
 
 You can register new accounts via the `/users` endpoint. Example default users:
 
-- **Administrator:**
-    - Email: admin@admin.com
-    - Password: admin123
-    - Role: Admin (can manage users and notes)
-- **User:**
-    - Email: juan.perez@user.com
-    - Password: juan123
-    - Role: User (can create and manage their own notes)
+- **TonyS-dev:**
+    - Email: tony@mail.com
+    - Password: password123
+- **Vivi:**
+    - Email: vivi@mail.com
+    - Password: password123
+- **Antonio:**
+    - Email: antonio@mail.com
+    - Password: password123
+- **TestUser:**
+    - Email: testuser@mail.com
+    - Password: password123
 
 *Note: Passwords are securely hashed using bcrypt before storage.*
 
@@ -77,15 +81,31 @@ You can register new accounts via the `/users` endpoint. Example default users:
 
 ---
 
+## ⚙️ Runtimes & Engines
+
+- **Node.js** (`>=18.17.0`): JavaScript runtime environment
+- **npm** (`>=9.6.7`): Node.js package manager
+- **PostgreSQL** (`^8.16.3`): Relational database engine
+
+---
+
 ## 🛠️ Technologies Used
 
-- **NestJS:** Modular Node.js framework
-- **TypeORM:** ORM for PostgreSQL
-- **PostgreSQL:** Relational database
-- **JWT:** Authentication tokens
-- **bcrypt:** Password hashing
-- **class-validator:** Input validation
-- **Supertest/Jest:** E2E and unit testing
+- **NestJS** (`^11.0.1`): Modular Node.js framework
+- **TypeORM** (`^0.3.25`): ORM for PostgreSQL
+- **JWT & Passport** (`^11.0.0`, `^11.0.5`, `^4.0.1`, `^1.0.0`, `^0.7.0`): Authentication and authorization
+- **bcrypt** (`^6.0.0`): Password hashing
+- **class-validator & class-transformer** (`^0.14.2`, `^0.5.1`): Input validation and transformation
+- **RxJS** (`^7.8.1`): Reactive programming utilities
+- **Reflect-metadata** (`^0.2.2`): TypeScript metadata reflection
+- **Supertest** (`^7.0.0`): E2E testing
+- **Jest** (`^30.0.0`): Unit and integration testing
+- **ESLint** (`^9.18.0`): Linting for code quality
+- **Prettier** (`^3.4.2`): Code formatting
+- **typescript-eslint** (`^8.20.0`): TypeScript linting
+- **ts-node** (`^10.9.2`): TypeScript runtime
+- **ts-jest** (`^29.2.5`): TypeScript testing
+- **@nestjs/config** (`^4.0.2`): Environment configuration
 
 ---
 

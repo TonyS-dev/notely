@@ -10,11 +10,10 @@ export function MainContent() {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const response = await api.getActiveNotes();
-        setNotes(response.data);
+        const response = await api.getActiveNotes(1, 9);
+        setNotes(response.data.data);
       } catch (error) {
         console.error('Failed to fetch notes:', error);
-        // !TODO: If the error is 401, it means the token is bad, logout should be called
       } finally {
         setIsLoading(false);
       }
