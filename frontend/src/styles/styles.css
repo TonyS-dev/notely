@@ -592,6 +592,7 @@ a {
   padding: 14px 24px;
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
+  max-height: 112px;
 }
 .modal-header h3 {
   font-size: 20px;
@@ -959,6 +960,62 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
   text-align: center;
   z-index: 5;
 }
+
+/* Styles for the new View Note Modal */
+.modal-content-view {
+  animation: modal-swoop-in 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.modal-content-view.closing {
+  animation: modal-swoop-out 0.2s forwards cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+.view-modal-title {
+  flex-grow: 1;
+  padding-right: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 100%;
+}
+
+.view-modal-body {
+  padding: 20px 28px;
+  flex: 1;
+  overflow-y: auto;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.view-modal-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.view-modal-content {
+  font-size: 15px;
+  white-space: pre-wrap;
+  word-wrap: break-word; 
+  margin-bottom: 24px;
+}
+
+.view-modal-categories {
+  margin-top: 16px;
+}
+
+.view-modal-categories h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.note-item {
+  cursor: pointer;
+}
+
 
 /* ==========================================================================
    Responsive Design

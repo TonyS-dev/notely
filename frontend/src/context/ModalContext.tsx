@@ -3,43 +3,69 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Note } from '../types';
 import { NoteModal } from '../components/NoteModal';
+import { ViewNoteModal } from '../components/ViewNoteModal';
 import { ModalContext } from './ModalContextTypes';
 import { useNotesContext } from '../hooks/useNotesContext';
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState<Note | null>(null);
+
+  const [noteToView, setNoteToView] = useState<Note | null>(null);
+
   const { refetchNotes } = useNotesContext();
 
   const handleNoteSaved = () => {
-    setIsModalOpen(false);
+    setIsEditModalOpen(false);
     refetchNotes();
   };
 
   const openCreateNoteModal = () => {
     setNoteToEdit(null);
-    setIsModalOpen(true);
+    setIsEditModalOpen(true);
   };
 
   const openEditNoteModal = (note: Note) => {
     setNoteToEdit(note);
-    setIsModalOpen(true);
+    setIsEditModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const openViewNoteModal = (note: Note) => {
+    setNoteToView(note);
+  };
+
+  const closeViewNoteModal = () => {
+    setNoteToView(null);
   };
 
   return (
     <ModalContext.Provider
-      value={{ openCreateNoteModal, openEditNoteModal, closeModal }}
+      value={{
+        openCreateNoteModal,
+        openEditNoteModal,
+        closeModal: closeEditModal,
+        openViewNoteModal,
+      }}
     >
       {children}
+
+      {/* Render the Edit/Create Modal */}
       <NoteModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
+        isOpen={isEditModalOpen}
+        onClose={closeEditModal}
         onNoteSaved={handleNoteSaved}
         noteToEdit={noteToEdit}
+      />
+
+      {/* Render the new View Modal */}
+      <ViewNoteModal
+        isOpen={!!noteToView}
+        onClose={closeViewNoteModal}
+        note={noteToView}
       />
     </ModalContext.Provider>
   );

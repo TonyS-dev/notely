@@ -1,8 +1,9 @@
 // frontend/src/hooks/useModal.ts
 import { useContext } from 'react';
 import { ModalContext } from '../context/ModalContextTypes';
+import type { ExtendedModalContextType } from '../context/ModalContextTypes';
 
-export const useModal = () => {
+export const useModal = (): ExtendedModalContextType => {
   const context = useContext(ModalContext);
   if (context === undefined) {
     throw new Error('useModal must be used within a ModalProvider');
