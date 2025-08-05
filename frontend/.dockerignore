@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+.git
+.gitignore
+README.md
+.env
+.vscode
+dist
+.eslintrc.js
+.prettierrc
+*.spec.ts
+*.test.ts
+coverage

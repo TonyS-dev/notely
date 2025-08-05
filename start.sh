@@ -3,60 +3,90 @@
 # A simple script to build and run the entire application using Docker Compose.
 
 # --- Colors for Output ---
+RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-RED='\033[0;31m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${YELLOW}✅ Checking prerequisites...${NC}"
+# Function to print colored output
+print_message() {
+    echo -e "${2}${1}${NC}"
+}
 
-# Check if Docker is installed
-if ! command -v docker &> /dev/null
-then
-    echo "Error: docker could not be found. Please install Docker."
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+print_message "🐳 Full-Stack Notes Management Application - Docker Setup" $BLUE
+print_message "==========================================================" $BLUE
+
+# Check prerequisites
+print_message "📋 Checking prerequisites..." $YELLOW
+
+if ! command_exists docker; then
+    print_message "❌ Docker is not installed. Please install Docker first." $RED
+    print_message "   Visit: https://docs.docker.com/engine/install/" $YELLOW
     exit 1
 fi
 
-# Check if Docker Compose is installed
-if ! docker compose version &> /dev/null
-then
-    echo "Error: docker compose could not be found. Please install Docker with Compose."
+if ! command_exists docker-compose && ! docker compose version >/dev/null 2>&1; then
+    print_message "❌ Docker Compose is not available. Please install Docker Compose." $RED
     exit 1
 fi
 
-# Check if user can run Docker commands
-if ! docker ps &> /dev/null
-then
-    echo -e "${RED}Error: Cannot connect to Docker daemon.${NC}"
-    echo -e "Please make sure Docker is running and you have permission to use it."
-    echo -e "You may need to:"
-    echo -e "  1. Start Docker Desktop (if on macOS/Windows)"
-    echo -e "  2. Add your user to the docker group: ${YELLOW}sudo usermod -aG docker \$USER${NC}"
-    echo -e "  3. Or run with sudo: ${YELLOW}sudo ./start.sh${NC}"
+print_message "✅ Docker is installed" $GREEN
+
+# Check if Docker daemon is running
+if ! docker info >/dev/null 2>&1; then
+    print_message "❌ Docker daemon is not running. Please start Docker first." $RED
     exit 1
 fi
 
-echo -e "${GREEN}✅ Prerequisites met. Starting the application...${NC}"
+print_message "✅ Docker daemon is running" $GREEN
 
-# Clean up any existing containers
-echo -e "${YELLOW}Cleaning up existing containers...${NC}"
-docker compose down --volumes
+# Stop any existing containers
+print_message "🛑 Stopping existing containers..." $YELLOW
+docker-compose down -v >/dev/null 2>&1
 
-# Build and start the containers in detached mode (-d)
-# The --build flag forces a rebuild of the images if the Dockerfiles have changed.
-echo -e "${YELLOW}Building and starting containers...${NC}"
-docker compose up --build -d
+# Clean up old images (optional)
+print_message "🧹 Cleaning up old images..." $YELLOW
+docker system prune -f >/dev/null 2>&1
 
-if [ $? -eq 0 ]; then
-    echo -e "\n${GREEN}🚀 Application is starting!${NC}"
-    echo -e "   - Frontend will be available at: ${YELLOW}http://localhost:5173${NC}"
-    echo -e "   - Backend API will be available at: ${YELLOW}http://localhost:3000${NC}"
-    echo -e "   - PostgreSQL database is running on port 5433"
-    echo -e "\n${YELLOW}⏳ Please wait a moment for all services to be ready...${NC}"
-    echo -e "To see logs, run: ${YELLOW}docker compose logs -f${NC}"
-    echo -e "To stop the application, run: ${YELLOW}docker compose down${NC}\n"
+# Build and start services
+print_message "🏗️  Building and starting services..." $YELLOW
+print_message "   This may take a few minutes on first run..." $YELLOW
+
+if docker-compose up --build -d; then
+    print_message "✅ All services started successfully!" $GREEN
+    
+    # Wait for services to be ready
+    print_message "⏳ Waiting for services to be ready..." $YELLOW
+    sleep 10
+    
+    # Check service health
+    if docker-compose ps | grep -q "healthy\|running"; then
+        print_message "🎉 Application is ready!" $GREEN
+        print_message "" $NC
+        print_message "📱 Access the application:" $BLUE
+        print_message "   Frontend: http://localhost:5173" $GREEN
+        print_message "   Backend API: http://localhost:3000" $GREEN
+        print_message "" $NC
+        print_message "👤 Default login credentials:" $BLUE
+        print_message "   Email: tony@mail.com | Password: password123" $YELLOW
+        print_message "   Email: vivi@mail.com | Password: password123" $YELLOW
+        print_message "" $NC
+        print_message "📋 Useful commands:" $BLUE
+        print_message "   View logs: docker-compose logs -f" $YELLOW
+        print_message "   Stop: docker-compose down" $YELLOW
+        print_message "   Restart: docker-compose restart" $YELLOW
+    else
+        print_message "⚠️  Services started but may still be initializing..." $YELLOW
+        print_message "   Check logs with: docker-compose logs -f" $YELLOW
+    fi
 else
-    echo -e "\n${RED}❌ Docker Compose failed to start.${NC}"
-    echo -e "Try running: ${YELLOW}docker compose logs${NC} to see what went wrong."
+    print_message "❌ Failed to start services. Check the logs:" $RED
+    print_message "   docker-compose logs" $YELLOW
     exit 1
 fi

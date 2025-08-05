@@ -17,4 +17,13 @@ export class AppController {
   getHealthCheck(): { status: 'ok' } {
     return this.appService.getHealthCheck();
   }
+
+  @Get('health')
+  getHealth(): object {
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      service: 'notes-api',
+    };
+  }
 }
