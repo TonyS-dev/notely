@@ -1,17 +1,19 @@
 // frontend/src/components/Sidebar.tsx
+import { NavLink, useNavigate } from 'react-router-dom';
 import type { SidebarProps } from '../types';
 import { useModal } from '../hooks/useModal';
+import { useAuth } from '../hooks/useAuth';
 
-// !TODO: add more props like the user's name and email
-
-export const Sidebar = ({
-  user,
-  onLogout,
-  onShowArchived,
-  onShowNotes,
-  showArchived,
-}: SidebarProps) => {
+export const Sidebar = ({ user }: SidebarProps) => {
   const { openCreateNoteModal } = useModal();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <aside className="sidebar">
       <div className="user-profile">
@@ -21,7 +23,6 @@ export const Sidebar = ({
           className="profile-img"
         />
         <div className="user-info">
-          {/* User information from the API */}
           <h3>{user?.username || 'Loading...'}</h3>
           <p>{user?.email || '...'}</p>
         </div>
@@ -31,28 +32,36 @@ export const Sidebar = ({
         + New note
       </button>
 
-      <nav className="sidebar-nav">
-        <div className="nav-item">
-          <button
-            className={`nav-btn ${!showArchived ? 'active' : ''}`}
-            onClick={onShowNotes}
-          >
-            📝 Notes
+      <div className="nav-footer-wrapper">
+        <nav className="sidebar-nav">
+          <div className="nav-item">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                `nav-btn ${isActive ? 'active' : ''}`
+              }
+            >
+              📝 Notes
+            </NavLink>
+          </div>
+          <div className="nav-item">
+            <NavLink
+              to="/archived"
+              className={({ isActive }) =>
+                `nav-btn ${isActive ? 'active' : ''}`
+              }
+            >
+              📂 Archived
+            </NavLink>
+          </div>
+        </nav>
+
+        <div className="sidebar-footer">
+          <button className="logout-btn" onClick={handleLogout}>
+            Logout
           </button>
         </div>
-        <div className="nav-item">
-          <button
-            className={`nav-btn ${showArchived ? 'active' : ''}`}
-            onClick={onShowArchived}
-          >
-            📂 Archived
-          </button>
-        </div>
-      </nav>
-      <div className="sidebar-footer">
-        <button className="logout-btn" onClick={onLogout}>
-          Logout
-        </button>
       </div>
     </aside>
   );

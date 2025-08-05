@@ -1,33 +1,30 @@
-// frontend/src/components/AuthPage.tsx
+// frontend/src/pages/AuthPage.tsx
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import * as api from '../api/apiClient';
 import { AxiosError } from 'axios';
-import type { AuthPageProps } from '../types';
 
-// This component needs one function, onLoginSuccess,
-// to tell the parent App component
-// that the user has successfully logged in.
-export function AuthPage({ onLoginSuccess }: AuthPageProps) {
-  // State to track if we are showing the Login form or the Register form
-  const [isLoginView, setIsLoginView] = useState(true);
+export function AuthPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
 
-  // State for the form inputs
+  // Determine the view based on the URL, not internal state
+  const isLoginView = location.pathname === '/login';
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [username, setUsername] = useState(''); // Only for the registration form
-
-  // State for handling loading and error messages
+  const [username, setUsername] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // This function handles both login and registration submissions
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
     setError('');
 
-    // A helper function to create user-friendly error messages
     const parseErrorMessage = (serverMessage: string): string => {
       if (serverMessage.includes('Key (email)')) {
         return 'An account with this email already exists.';
@@ -35,33 +32,27 @@ export function AuthPage({ onLoginSuccess }: AuthPageProps) {
       if (serverMessage.includes('Key (username)')) {
         return 'This username is already taken. Please choose another.';
       }
-      // !TODO: Add more specific checks here
       return 'An unexpected error occurred. Please try again.';
     };
 
     try {
+      let token: string;
       if (isLoginView) {
-        // --- LOGIN LOGIC ---
         const response = await api.login(email, password);
-        const token = response.data.access_token;
-        localStorage.setItem('accessToken', token);
-        onLoginSuccess(token); // Notify the parent App component
+        token = response.data.access_token;
       } else {
-        // --- REGISTRATION LOGIC ---
         await api.register(username, email, password);
-        // After a successful registration, the user is automatically logged in
         const response = await api.login(email, password);
-        const token = response.data.access_token;
-        localStorage.setItem('accessToken', token);
-        onLoginSuccess(token);
+        token = response.data.access_token;
       }
+
+      login(token);
+      navigate('/', { replace: true });
     } catch (err) {
       let errorMessage = 'An unexpected error occurred.';
       if (err instanceof AxiosError && err.response?.data?.message) {
         const serverMessage = err.response.data.message;
-        // Check for specific error messages
         if (err.response.status === 409) {
-          // 409 Conflict
           errorMessage = parseErrorMessage(serverMessage);
         } else {
           errorMessage = Array.isArray(serverMessage)
@@ -77,7 +68,6 @@ export function AuthPage({ onLoginSuccess }: AuthPageProps) {
 
   return (
     <>
-      {/* We are using fragments <>...</> to return multiple top-level elements */}
       <div className="particles" id="particles"></div>
       <main id="main">
         <header className="login-header">
@@ -111,8 +101,6 @@ export function AuthPage({ onLoginSuccess }: AuthPageProps) {
         <form onSubmit={handleSubmit} noValidate>
           <fieldset>
             <legend className="hidden">User Credentials</legend>
-
-            {/* Conditional Rendering: Only show the username input if it's the registration view */}
             {!isLoginView && (
               <div className="form-group">
                 <input
@@ -126,7 +114,6 @@ export function AuthPage({ onLoginSuccess }: AuthPageProps) {
                 />
               </div>
             )}
-
             <div className="form-group">
               <input
                 type="email"
@@ -138,7 +125,6 @@ export function AuthPage({ onLoginSuccess }: AuthPageProps) {
                 autoComplete="email"
               />
             </div>
-
             <div className="form-group">
               <input
                 type="password"
@@ -152,7 +138,6 @@ export function AuthPage({ onLoginSuccess }: AuthPageProps) {
             </div>
           </fieldset>
 
-          {/* Display any error messages from the API */}
           {error && (
             <p
               style={{
@@ -179,7 +164,6 @@ export function AuthPage({ onLoginSuccess }: AuthPageProps) {
             <div className={`button-loader ${isLoading ? 'show' : ''}`}></div>
           </div>
 
-          {/* This is the toggle link to switch between Login and Register views */}
           <p
             style={{
               color: 'white',
@@ -191,13 +175,8 @@ export function AuthPage({ onLoginSuccess }: AuthPageProps) {
             {isLoginView
               ? "Don't have an account? "
               : 'Already have an account? '}
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setIsLoginView(!isLoginView);
-                setError(''); // Clear any old errors when switching views
-              }}
+            <Link
+              to={isLoginView ? '/register' : '/login'}
               style={{
                 color: '#2196f3',
                 textDecoration: 'none',
@@ -205,7 +184,7 @@ export function AuthPage({ onLoginSuccess }: AuthPageProps) {
               }}
             >
               {isLoginView ? 'Sign Up' : 'Sign In'}
-            </a>
+            </Link>
           </p>
         </form>
       </main>

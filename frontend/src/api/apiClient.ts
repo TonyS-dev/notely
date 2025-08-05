@@ -1,19 +1,13 @@
-// frontend/src/services/api.ts
-import axios from 'axios';
-import type {
-  CreateCategoryData,
-  CreateNoteData,
-  UpdateNoteData,
-} from '../types';
+// frontend/src/api/apiClient.ts
+import axios, { type AxiosInstance, type AxiosResponse } from 'axios';
 
-const API_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-if (!API_URL) {
-  throw new Error('VITE_API_BASE_URL is not defined in .env file');
-}
-
-const apiClient = axios.create({
-  baseURL: API_URL,
+const apiClient: AxiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 apiClient.interceptors.request.use(
@@ -24,71 +18,68 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error),
-);
-
-// Interceptor to handle 401 Unauthorized errors
-apiClient.interceptors.response.use(
-  // On success, just return the response
-  (response) => response,
-  // On error, handle it globally
   (error) => {
-    const originalRequest = error.config;
-
-    // Check for 401 Unauthorized error AND ensure it's not a retry AND it's not the login page
-    if (
-      error.response?.status === 401 &&
-      originalRequest.url !== '/auth/login'
-    ) {
-      console.error(
-        'Session expired or token is invalid. Redirecting to login.',
-      );
-      // This is where you would trigger a global logout
-      // Forcing a page reload to the root is a simple way to do it.
-      localStorage.removeItem('accessToken');
-      window.location.href = '/';
-      // Important: Return a new promise to prevent the original caller's .catch from firing
-      return new Promise(() => {});
-    }
-
-    // For all other errors (including 401 on the login page), just pass them along
     return Promise.reject(error);
   },
 );
 
-// --- API Functions with Types ---
+apiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('accessToken');
+      // Redirect to login page or handle unauthorized access
+      window.location.replace('/login');
+    }
+    return Promise.reject(error);
+  },
+);
 
-// --- AUTHENTICATION ---
-export const login = (email: string, password: string) =>
-  apiClient.post('/auth/login', { email, password });
+// Auth
+export const login = (
+  email: string,
+  password: string,
+): Promise<AxiosResponse<{ access_token: string }>> => {
+  return apiClient.post('/auth/login', { email, password });
+};
+export const register = (
+  username: string,
+  email: string,
+  password: string,
+): Promise<AxiosResponse> => {
+  return apiClient.post('/users', { username, email, password });
+};
 
-export const register = (username: string, email: string, password: string) =>
-  apiClient.post('/users', { username, email, password });
+// Notes
+export const getActiveNotes = (): Promise<AxiosResponse> =>
+  apiClient.get('/notes/active');
 
-// --- NOTES ---
-export const getActiveNotes = () => apiClient.get('/notes/active');
-export const getArchivedNotes = () => apiClient.get('/notes/archived');
+export const getArchivedNotes = (): Promise<AxiosResponse> =>
+  apiClient.get('/notes/archived');
 
-export const createNote = (noteData: CreateNoteData) =>
-  apiClient.post('/notes', noteData);
+export const createNote = (data: unknown): Promise<AxiosResponse> =>
+  apiClient.post('/notes', data);
 
-export const duplicateNote = (noteId: string) =>
-  apiClient.post(`/notes/duplicate/${noteId}`);
+export const updateNote = (id: string, data: unknown): Promise<AxiosResponse> =>
+  apiClient.put(`/notes/${id}`, data);
 
-export const updateNote = (noteId: string, noteData: UpdateNoteData) =>
-  apiClient.put(`/notes/${noteId}`, noteData);
+export const deleteNote = (id: string): Promise<AxiosResponse> =>
+  apiClient.delete(`/notes/${id}`);
 
-export const archiveNote = (noteId: string) =>
-  apiClient.patch(`/notes/${noteId}/archive`);
+export const archiveNote = (id: string): Promise<AxiosResponse> =>
+  apiClient.patch(`/notes/${id}/archive`);
 
-export const unarchiveNote = (noteId: string) =>
-  apiClient.patch(`/notes/${noteId}/unarchive`);
+export const unarchiveNote = (id: string): Promise<AxiosResponse> =>
+  apiClient.patch(`/notes/${id}/unarchive`);
 
-export const deleteNote = (noteId: string) =>
-  apiClient.delete(`/notes/${noteId}`);
+export const duplicateNote = (id: string): Promise<AxiosResponse> =>
+  apiClient.post(`/notes/duplicate/${id}`);
 
-// --- CATEGORIES ---
-export const createCategory = (categoryData: CreateCategoryData) =>
-  apiClient.post('/categories', categoryData);
+// Categories
+export const getCategories = (): Promise<AxiosResponse> =>
+  apiClient.get('/categories');
 
-export const getCategories = () => apiClient.get('/categories');
+export const createCategory = (data: unknown): Promise<AxiosResponse> =>
+  apiClient.post('/categories', data);
