@@ -23,6 +23,10 @@ describe('AppController', () => {
         status: 'ok',
         name: packageJson.name,
         version: packageJson.version,
+        api_endpoints: [
+          { path: '/status', method: 'GET' },
+          { path: '/health', method: 'GET' },
+        ],
       };
       expect(appController.getApiStatus()).toEqual(expectedStatus);
     });

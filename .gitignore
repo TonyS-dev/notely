@@ -8,10 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Compiled output
-*/dist
 /build
-dist-ssr
 node_modules
+*/dist
 
 # Tests
 coverage

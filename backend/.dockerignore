@@ -9,7 +9,6 @@ README.md
 .nyc_output
 coverage
 .vscode
-dist
 .eslintrc.js
 .prettierrc
 test

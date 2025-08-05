@@ -43,7 +43,7 @@ services:
       - PORT=${BACKEND_PORT}
       - JWT_SECRET=${JWT_SECRET}
     ports:
-      - "${BACKEND_PORT}:3000"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     networks:
       - notes_network
     depends_on:

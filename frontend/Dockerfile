@@ -1,5 +1,5 @@
 # Build Stage
-FROM node:20-alpine AS builder
+FROM  node:current-alpine3.22 AS builder
 
 # Set working directory
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Production Stage
-FROM node:20-alpine AS production
+FROM  node:current-alpine3.22 AS production
 
 # Install wget for health checks
 RUN apk add --no-cache wget
@@ -44,7 +44,7 @@ EXPOSE 5173
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:5173/ || exit 1
+  CMD curl -f http://localhost:5173/ || exit 1
 
 # Start the application
 CMD ["serve", "-s", "dist", "-l", "5173"]

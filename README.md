@@ -8,9 +8,36 @@ A modern, full-stack, and containerized web application for note-taking. This pr
 
 ## 🛠️ Tech Stack
 
--   **Frontend:** React, TypeScript, Vite, React Router, Axios
--   **Backend:** NestJS, TypeORM, PostgreSQL, JWT for Authentication
--   **DevOps:** Docker, Docker Compose
+### Frontend
+-   **React** (`^19.1.0`): Component-based UI library
+-   **TypeScript** (`~5.8.3`): Type safety and modern JavaScript features
+-   **Vite** (`^7.0.4`): Fast development server and build tool
+-   **React Router DOM** (`^7.7.1`): Client-side routing
+-   **Axios** (`^1.11.0`): HTTP client for API requests
+-   **React Hot Toast** (`^2.5.2`): Toast notifications
+-   **JWT Decode** (`^4.0.0`): JWT token decoding
+
+### Backend
+-   **NestJS** (`^11.0.1`): Progressive Node.js framework
+-   **TypeORM** (`^0.3.25`): Object-relational mapping
+-   **PostgreSQL** (`15-alpine`): Relational database
+-   **JWT** (`^11.0.0`): JSON Web Token authentication
+-   **Passport** (`^0.7.0` + `^4.0.1` + `^1.0.0`): Authentication middleware
+-   **bcrypt** (`^6.0.0`): Password hashing
+-   **class-validator** (`^0.14.2`): Input validation
+-   **class-transformer** (`^0.5.1`): Data transformation
+
+### Testing & Code Quality
+-   **Jest** (`^30.0.0`): Testing framework
+-   **TypeScript ESLint** (`^8.35.1` frontend / `^8.20.0` backend): TypeScript linting
+-   **Prettier** (`^3.4.2`): Code formatting
+-   **Supertest** (`^7.0.0`): API testing
+
+### DevOps & Infrastructure
+-   **Docker**: Containerization platform
+-   **Docker Compose**: Multi-container orchestration
+-   **Node.js** (`20-alpine`): JavaScript runtime environment
+-   **PostgreSQL** (`15-alpine`): Production database
 
 ---
 
