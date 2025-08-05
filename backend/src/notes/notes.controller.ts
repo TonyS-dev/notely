@@ -11,25 +11,51 @@ import {
   ValidationPipe,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Request as ExpressRequest } from 'express';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
-// Helper interface to extend Express Request with user information
 interface AuthenticatedRequest extends ExpressRequest {
-  user: {
-    userId: string;
-    username: string;
-  };
+  user: { userId: string; username: string };
 }
 
-@Controller('notes') // all the routes will be prefixed with /notes
-@UseGuards(JwtAuthGuard) // Protect all routes with JWT authentication
+@Controller('notes')
+@UseGuards(JwtAuthGuard)
 export class NotesController {
   constructor(private readonly notesService: NotesService) {}
+
+  @Get('/active')
+  findAllActive(
+    @Request() req: AuthenticatedRequest,
+    @Query(
+      new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+      }),
+    )
+    paginationQuery: PaginationQueryDto,
+  ) {
+    return this.notesService.findAllActive(req.user.userId, paginationQuery);
+  }
+
+  @Get('/archived')
+  findAllArchived(
+    @Request() req: AuthenticatedRequest,
+    @Query(
+      new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+      }),
+    )
+    paginationQuery: PaginationQueryDto,
+  ) {
+    return this.notesService.findAllArchived(req.user.userId, paginationQuery);
+  }
 
   @Post()
   create(
@@ -42,16 +68,6 @@ export class NotesController {
   @Post('/duplicate/:id')
   duplicate(@Request() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.notesService.duplicate(id, req.user.userId);
-  }
-
-  @Get('/active')
-  findAllActive(@Request() req: AuthenticatedRequest) {
-    return this.notesService.findAllActive(req.user.userId);
-  }
-
-  @Get('/archived')
-  findAllArchived(@Request() req: AuthenticatedRequest) {
-    return this.notesService.findAllArchived(req.user.userId);
   }
 
   @Put(':id')

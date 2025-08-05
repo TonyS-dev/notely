@@ -5,38 +5,40 @@ import { NoteItem } from '../components/NoteItem';
 import { CategoryFilter } from '../components/CategoryFilter';
 import { useModal } from '../hooks/useModal';
 import { useNotesContext } from '../hooks/useNotesContext';
-import { useSortedNotes } from '../hooks/useSortedNotes';
+import type { Note, Category } from '../types'; // Import types
 
 export function MainContentPage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null,
   );
   const { openEditNoteModal } = useModal();
-
-  // Get the current URL location to determine if we are on the archived page
   const location = useLocation();
   const isArchivedView = location.pathname === '/archived';
 
   const {
-    notes,
+    activeNotes,
+    archivedNotes,
     isLoading,
     error,
     handleDuplicate,
     handleArchive,
     handleUnarchive,
     handleDelete,
+    loadMoreActive,
+    loadMoreArchived,
+    hasMoreActive,
+    hasMoreArchived,
   } = useNotesContext();
 
-  // Filter notes based on the current view (active or archived) and selected category
-  const filteredNotes = notes
-    .filter((note) => (isArchivedView ? !note.isActive : note.isActive))
-    .filter(
-      (note) =>
-        selectedCategoryId === null ||
-        note.categories.some((cat) => cat.id === selectedCategoryId),
-    );
+  const notes = isArchivedView ? archivedNotes : activeNotes;
+  const hasMore = isArchivedView ? hasMoreArchived : hasMoreActive;
+  const loadMore = isArchivedView ? loadMoreArchived : loadMoreActive;
 
-  const sortedNotes = useSortedNotes(filteredNotes);
+  const filteredNotes = notes.filter(
+    (note: Note) =>
+      selectedCategoryId === null ||
+      note.categories.some((cat: Category) => cat.id === selectedCategoryId),
+  );
 
   if (isLoading) {
     return (
@@ -46,7 +48,6 @@ export function MainContentPage() {
         </header>
         <section className="dashboard">
           <div className="notes-section">
-            <h2>{isArchivedView ? '📁 Archived Notes' : '📝 My Notes'}</h2>
             <div className="loading-state">Loading Notes...</div>
           </div>
         </section>
@@ -62,7 +63,7 @@ export function MainContentPage() {
         </header>
         <section className="dashboard">
           <div className="notes-section">
-            <div className="error-state">Error: {error}</div>
+            <div className="error-state">{error}</div>
           </div>
         </section>
       </main>
@@ -77,26 +78,23 @@ export function MainContentPage() {
       <section className="dashboard">
         <div className="notes-section">
           <h2>{isArchivedView ? '📁 Archived notes' : '📝 My notes'}</h2>
-
-          {/* Only show the category filter on the active notes page */}
           {!isArchivedView && (
             <CategoryFilter
               selectedCategoryId={selectedCategoryId}
               onCategoryChange={setSelectedCategoryId}
             />
           )}
-
           <div className="notes-list">
-            {sortedNotes.length > 0 ? (
-              sortedNotes.map((note) => (
+            {filteredNotes.length > 0 ? (
+              filteredNotes.map((note: Note) => (
                 <NoteItem
                   key={note.id}
                   note={note}
                   onEdit={() => openEditNoteModal(note)}
-                  onDuplicate={() => handleDuplicate(note)}
-                  onArchive={() => handleArchive(note)}
-                  onUnarchive={() => handleUnarchive(note)}
-                  onDelete={() => handleDelete(note)}
+                  onDuplicate={() => handleDuplicate(note.id)}
+                  onArchive={() => handleArchive(note.id)}
+                  onUnarchive={() => handleUnarchive(note.id)}
+                  onDelete={() => handleDelete(note.id)}
                   isArchived={!note.isActive}
                 />
               ))
@@ -104,10 +102,17 @@ export function MainContentPage() {
               <p>
                 {isArchivedView
                   ? 'No archived notes.'
-                  : 'You have no active notes. Click "+ New note" in the sidebar to create one!'}
+                  : 'You have no active notes.'}
               </p>
             )}
           </div>
+          {hasMore && (
+            <div className="load-more-container">
+              <button onClick={loadMore} className="load-more-btn">
+                Load More
+              </button>
+            </div>
+          )}
         </div>
       </section>
     </main>

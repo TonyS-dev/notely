@@ -28,7 +28,7 @@ export interface Note {
   isActive: boolean;
   createdAt: string; // Dates will come as ISO strings from the API
   updatedAt: string;
-  categories: Category[]; // A note will have an array of full Category objects
+  categories: Category[];
   user: User;
 }
 
@@ -66,24 +66,29 @@ export interface ModalContextType {
 }
 
 export interface NotesContextType {
-  notes: Note[];
+  activeNotes: Note[];
+  archivedNotes: Note[];
   isLoading: boolean;
   error: string | null;
   refetchNotes: () => void;
-  handleDuplicate: (note: Note) => Promise<void>;
-  handleArchive: (note: Note) => Promise<void>;
-  handleDelete: (note: Note) => Promise<void>;
-  handleUnarchive: (note: Note) => Promise<void>;
+  loadMoreActive: () => Promise<void>;
+  loadMoreArchived: () => Promise<void>;
+  hasMoreActive: boolean;
+  hasMoreArchived: boolean;
+  handleDuplicate: (noteId: string) => Promise<void>;
+  handleArchive: (noteId: string) => Promise<void>;
+  handleDelete: (noteId: string) => Promise<void>;
+  handleUnarchive: (noteId: string) => Promise<void>;
 }
 
 // --- Component Prop Types ---
 export interface NoteItemProps {
   note: Note;
   onEdit: (note: Note) => void;
-  onDuplicate: (note: Note) => void;
-  onArchive: (note: Note) => void;
-  onUnarchive: (note: Note) => void;
-  onDelete: (note: Note) => void;
+  onDuplicate: (noteId: string) => void;
+  onArchive: (noteId: string) => void;
+  onUnarchive: (noteId: string) => void;
+  onDelete: (noteId: string) => void;
   isArchived?: boolean;
 }
 

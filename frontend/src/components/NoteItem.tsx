@@ -48,10 +48,10 @@ export const NoteItem = ({
             ✏️
           </button>
           <DropdownMenu
-            onDuplicate={() => onDuplicate(note)}
-            onArchive={() => onArchive(note)}
-            onUnarchive={() => onUnarchive(note)}
-            onDelete={() => onDelete(note)}
+            onDuplicate={() => onDuplicate(note.id)}
+            onArchive={() => onArchive(note.id)}
+            onUnarchive={() => onUnarchive(note.id)}
+            onDelete={() => onDelete(note.id)}
             isArchived={isArchived}
           />
         </div>

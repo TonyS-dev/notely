@@ -1,13 +1,10 @@
-// frontend/src/api/apiClient.ts
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: { 'Content-Type': 'application/json' },
 });
 
 apiClient.interceptors.request.use(
@@ -18,19 +15,14 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 
 apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('accessToken');
-      // Redirect to login page or handle unauthorized access
       window.location.replace('/login');
     }
     return Promise.reject(error);
@@ -52,12 +44,18 @@ export const register = (
   return apiClient.post('/users', { username, email, password });
 };
 
-// Notes
-export const getActiveNotes = (): Promise<AxiosResponse> =>
-  apiClient.get('/notes/active');
+// Update note-fetching functions to accept pagination params
+export const getActiveNotes = (
+  page: number,
+  limit: number,
+): Promise<AxiosResponse> =>
+  apiClient.get('/notes/active', { params: { page, limit } });
 
-export const getArchivedNotes = (): Promise<AxiosResponse> =>
-  apiClient.get('/notes/archived');
+export const getArchivedNotes = (
+  page: number,
+  limit: number,
+): Promise<AxiosResponse> =>
+  apiClient.get('/notes/archived', { params: { page, limit } });
 
 export const createNote = (data: unknown): Promise<AxiosResponse> =>
   apiClient.post('/notes', data);

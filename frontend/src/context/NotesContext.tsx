@@ -4,29 +4,29 @@ import { useNotes } from '../hooks/useNotes';
 import { NotesContext } from './NotesContextTypes';
 import * as api from '../api/apiClient';
 import type { NotesContextType } from '../types';
+import type { AxiosResponse } from 'axios';
 
 export const NotesProvider = ({ children }: { children: ReactNode }) => {
   const notesData = useNotes();
 
-  // Handler functions for note actions
-  const handleDuplicate: NotesContextType['handleDuplicate'] = async (note) => {
-    await api.duplicateNote(note.id);
-    notesData.refetchNotes();
-  };
-  const handleArchive: NotesContextType['handleArchive'] = async (note) => {
-    await api.archiveNote(note.id);
-    notesData.refetchNotes();
-  };
-  const handleUnarchive: NotesContextType['handleUnarchive'] = async (note) => {
-    await api.unarchiveNote(note.id);
-    notesData.refetchNotes();
-  };
-  const handleDelete: NotesContextType['handleDelete'] = async (note) => {
-    await api.deleteNote(note.id);
-    notesData.refetchNotes();
+  const handleNoteAction = async (action: Promise<AxiosResponse<unknown>>) => {
+    await action;
+    notesData.refetchNotes(); // Refetch all notes after any modification
   };
 
-  const value = {
+  const handleDuplicate = (noteId: string) =>
+    handleNoteAction(api.duplicateNote(noteId));
+
+  const handleArchive = (noteId: string) =>
+    handleNoteAction(api.archiveNote(noteId));
+
+  const handleUnarchive = (noteId: string) =>
+    handleNoteAction(api.unarchiveNote(noteId));
+
+  const handleDelete = (noteId: string) =>
+    handleNoteAction(api.deleteNote(noteId));
+
+  const value: NotesContextType = {
     ...notesData,
     handleDuplicate,
     handleArchive,

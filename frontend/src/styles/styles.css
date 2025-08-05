@@ -446,6 +446,9 @@ a {
   color: var(--text-primary);
   margin-bottom: 12px;
   line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .note-content {
@@ -458,6 +461,7 @@ a {
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  overflow-wrap: break-word; 
   transition: all 0.3s ease;
   flex-grow: 1;
 }
