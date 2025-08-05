@@ -15,21 +15,15 @@ export const NoteItem = ({
   const formattedDate = new Date(note.createdAt).toLocaleDateString();
   const { openViewNoteModal } = useModal();
 
-  // This function stops the click from bubbling up to the main div
-  const handleActionClick = (e: React.MouseEvent, action: () => void) => {
-    e.stopPropagation();
-    action();
-  };
-
   return (
     <div className="note-item" onClick={() => openViewNoteModal(note)}>
       <div className="note-header">
         <p className="date">{formattedDate}</p>
-        <div className="note-actions">
+        <div className="note-actions" onClick={(e) => e.stopPropagation()}>
           <button
             className="note-action-btn"
             title="Edit"
-            onClick={(e) => handleActionClick(e, () => onEdit(note))}
+            onClick={() => onEdit(note)}
           >
             ✏️
           </button>

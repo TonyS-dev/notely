@@ -6,6 +6,8 @@ import type { NoteModalProps } from '../types';
 import { AxiosError } from 'axios';
 import { CategorySelector } from './CategorySelector';
 
+const TITLE_MAX_LENGTH = 40;
+
 // NoteModal component for creating and editing notes
 export const NoteModal = ({
   isOpen,
@@ -119,7 +121,14 @@ export const NoteModal = ({
 
         <form className="note-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="noteTitle">Title *</label>
+            <div className="form-label-group">
+              <label htmlFor="noteTitle">Title *</label>
+              <span
+                className={`char-counter ${title.length >= TITLE_MAX_LENGTH ? 'limit-reached' : ''}`}
+              >
+                {title.length} / {TITLE_MAX_LENGTH}
+              </span>
+            </div>
             <input
               type="text"
               id="noteTitle"
@@ -127,6 +136,7 @@ export const NoteModal = ({
               onChange={(e) => setTitle(e.target.value)}
               required
               placeholder="Enter note title..."
+              maxLength={TITLE_MAX_LENGTH}
             />
           </div>
 

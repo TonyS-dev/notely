@@ -1,11 +1,10 @@
-// backend/src/notes/notes.service.ts
 import {
   Injectable,
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository, In, Like } from 'typeorm';
 import { Note } from './note.entity';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
@@ -35,7 +34,6 @@ export class NotesService {
     userId: string,
     paginationQuery: PaginationQueryDto,
   ): Promise<PaginatedResult<Note>> {
-    // Use default values from DTO if not provided
     const page = paginationQuery.page || 1;
     const limit = paginationQuery.limit || 9;
     const skip = (page - 1) * limit;
@@ -64,7 +62,6 @@ export class NotesService {
     userId: string,
     paginationQuery: PaginationQueryDto,
   ): Promise<PaginatedResult<Note>> {
-    // Use default values from DTO if not provided
     const page = paginationQuery.page || 1;
     const limit = paginationQuery.limit || 9;
     const skip = (page - 1) * limit;
@@ -113,13 +110,49 @@ export class NotesService {
 
   async duplicate(id: string, userId: string): Promise<Note> {
     const noteToDuplicate = await this.findOneByIdAndOwner(id, userId);
+
+    // Determine the base title by stripping any existing copy number like "(#)"
+    let baseTitle = noteToDuplicate.title;
+    const copyRegex = /\s\((\d+)\)$/; // Matches " (number)" at the end of a string
+    const match = noteToDuplicate.title.match(copyRegex);
+    if (match) {
+      baseTitle = noteToDuplicate.title.substring(0, match.index);
+    }
+
+    // Find all notes with a similar title to find the highest copy number.
+    const relatedNotes = await this.notesRepository.find({
+      where: {
+        user: { id: userId },
+        title: Like(`${baseTitle}%`),
+      },
+      select: ['title'],
+    });
+
+    // Calculate the next available copy number
+    let highestCopy = 0;
+    relatedNotes.forEach((note) => {
+      // Check for an exact match to the base title (the first original)
+      const relatedMatch = note.title.match(copyRegex);
+      if (relatedMatch) {
+        const copyNumber = parseInt(relatedMatch[1], 10);
+        if (copyNumber > highestCopy) {
+          highestCopy = copyNumber;
+        }
+      }
+    });
+
+    const newCopyNumber = highestCopy + 1;
+    const newTitle = `${baseTitle} (${newCopyNumber})`;
+
+    // Create the new note with the intelligently generated title
     const newNote = this.notesRepository.create({
-      title: `Copy of ${noteToDuplicate.title}`,
+      title: newTitle,
       content: noteToDuplicate.content,
       isActive: noteToDuplicate.isActive,
       categories: noteToDuplicate.categories,
       user: { id: userId },
     });
+
     return this.notesRepository.save(newNote);
   }
 

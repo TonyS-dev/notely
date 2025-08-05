@@ -1,15 +1,16 @@
-// backend/src/notes/dto/create-note.dto.ts
 import {
   IsString,
   IsNotEmpty,
-  IsArray,
   IsOptional,
+  IsArray,
   IsUUID,
+  MaxLength,
 } from 'class-validator';
 
 export class CreateNoteDto {
   @IsString()
   @IsNotEmpty()
+  @MaxLength(40)
   title: string;
 
   @IsString()

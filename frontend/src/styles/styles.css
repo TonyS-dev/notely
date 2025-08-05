@@ -626,6 +626,25 @@ a {
   flex-direction: column;
   gap: 16px;
 }
+
+.form-label-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.char-counter {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.char-counter.limit-reached {
+  color: var(--danger-color);
+  font-weight: 600;
+}
+
 .modal-content .form-group {
   display: flex;
   flex-direction: column;

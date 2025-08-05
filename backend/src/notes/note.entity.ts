@@ -18,7 +18,7 @@ export class Note {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ length: 40 })
   title: string;
 
   @Column('text')
