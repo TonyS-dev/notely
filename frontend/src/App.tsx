@@ -1,5 +1,6 @@
 // frontend/src/App.tsx
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { AuthPage } from './pages/AuthPage';
 import { MainContentPage } from './pages/MainContentPage';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -15,6 +16,26 @@ function App() {
   return (
     // This dynamically applies the 'auth-view' class for the login page styling
     <div className={`app-container ${isAuthRoute ? 'auth-view' : ''}`}>
+      {/* 
+        This Toaster component is responsible for rendering the notifications.
+        Placing it at the top level makes it available everywhere in the app.
+      */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: 'var(--text-primary)',
+            color: 'var(--background-primary)',
+            boxShadow: 'var(--shadow-lg)',
+            minWidth: '250px',
+            fontSize: '18px',
+          },
+          success: {
+            duration: 2000,
+          },
+        }}
+      />
       <Routes>
         {/*
           Public Only Routes:
