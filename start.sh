@@ -74,8 +74,7 @@ if docker-compose up --build -d; then
         print_message "   Backend API: http://localhost:3000" $GREEN
         print_message "" $NC
         print_message "👤 Default login credentials:" $BLUE
-        print_message "   Email: tony@mail.com | Password: password123" $YELLOW
-        print_message "   Email: vivi@mail.com | Password: password123" $YELLOW
+        print_message "   Email: tonys-dev@mail.com | Password: password123" $YELLOW
         print_message "" $NC
         print_message "📋 Useful commands:" $BLUE
         print_message "   View logs: docker-compose logs -f" $YELLOW
