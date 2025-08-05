@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "${DB_PORT}:5432"
+      - "${DB_PORT}"
     networks:
       - notes_network
     deploy:
@@ -27,7 +27,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-
   # NestJS Backend API
   backend:
     container_name: notes_backend
@@ -58,7 +57,6 @@ services:
           cpus: '0.25'
           memory: 256M
     restart: unless-stopped
-
   # React Frontend
   frontend:
     container_name: notes_frontend
@@ -66,9 +64,9 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     environment:
-      - VITE_API_URL=http://localhost:${BACKEND_PORT}
+      - VITE_API_URL=${VITE_API_URL}
     ports:
-      - "${FRONTEND_PORT}:5173"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     networks:
       - notes_network
     depends_on:
@@ -83,10 +81,12 @@ services:
           memory: 128M
     restart: unless-stopped
 
+# Network definition allows containers to communicate with each other.
 networks:
   notes_network:
     driver: bridge
 
+# Volume definition ensures database data persists between container restarts.
 volumes:
   postgres_data:
     driver: local
