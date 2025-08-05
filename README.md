@@ -181,58 +181,12 @@ You can register new accounts directly from the login page or use these default 
 
 ---
 
-## 📁 Example Directory Tree
-
-```
-Santiago-837721/
-├── backend/
-│   ├── src/
-│   │   ├── auth/
-│   │   ├── categories/
-│   │   ├── common/
-│   │   ├── notes/
-│   │   ├── users/
-│   │   ├── app.controller.ts
-│   │   ├── app.module.ts
-│   │   ├── app.service.ts
-│   │   ├── seed.ts
-│   ├── test/
-│   ├── .env
-│   ├── Dockerfile
-│   ├── .dockerignore
-│   ├── package.json
-│   └── README.md
-├── frontend/
-│   ├── src/
-│   │   ├── api/
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── hooks/
-│   │   ├── pages/
-│   │   ├── styles/
-│   │   ├── types/
-│   │   └── main.tsx
-│   ├── public/
-│   ├── .env
-│   ├── Dockerfile
-│   ├── .dockerignore
-│   ├── package.json
-│   └── README.md
-├── docker-compose.yml
-├── .env
-├── start.sh
-├── stop.sh
-└── CHALLENGE.md
-```
-
----
-
 ## 🖥️ Live Demo
 
 Live URL here:
 
 ```
-https://your-live-demo-url.com
+http://174.138.72.82:5173
 ```
 
 ---

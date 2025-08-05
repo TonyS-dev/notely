@@ -48,7 +48,7 @@ print_message "✅ Docker daemon is running" $GREEN
 
 # Stop any existing containers
 print_message "🛑 Stopping existing containers..." $YELLOW
-docker-compose down -v >/dev/null 2>&1
+docker compose down -v >/dev/null 2>&1
 
 # Clean up old images (optional)
 print_message "🧹 Cleaning up old images..." $YELLOW
@@ -58,7 +58,7 @@ docker system prune -f >/dev/null 2>&1
 print_message "🏗️  Building and starting services..." $YELLOW
 print_message "   This may take a few minutes on first run..." $YELLOW
 
-if docker-compose up --build -d; then
+if docker compose up --build -d; then
     print_message "✅ All services started successfully!" $GREEN
     
     # Wait for services to be ready
@@ -66,7 +66,7 @@ if docker-compose up --build -d; then
     sleep 10
     
     # Check service health
-    if docker-compose ps | grep -q "healthy\|running"; then
+    if docker compose ps | grep -q "healthy\|running"; then
         print_message "🎉 Application is ready!" $GREEN
         print_message "" $NC
         print_message "📱 Access the application:" $BLUE
@@ -77,15 +77,15 @@ if docker-compose up --build -d; then
         print_message "   Email: tonys-dev@mail.com | Password: password123" $YELLOW
         print_message "" $NC
         print_message "📋 Useful commands:" $BLUE
-        print_message "   View logs: docker-compose logs -f" $YELLOW
-        print_message "   Stop: docker-compose down" $YELLOW
-        print_message "   Restart: docker-compose restart" $YELLOW
+        print_message "   View logs: docker compose logs -f" $YELLOW
+        print_message "   Stop: ./stop.sh" $YELLOW
+        print_message "   Restart: docker compose restart" $YELLOW
     else
         print_message "⚠️  Services started but may still be initializing..." $YELLOW
-        print_message "   Check logs with: docker-compose logs -f" $YELLOW
+        print_message "   Check logs with: docker compose logs -f" $YELLOW
     fi
 else
     print_message "❌ Failed to start services. Check the logs:" $RED
-    print_message "   docker-compose logs" $YELLOW
+    print_message "   docker compose logs" $YELLOW
     exit 1
 fi
