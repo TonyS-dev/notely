@@ -1,4 +1,4 @@
-# Full-Stack Notes Management Application
+# Notely - Full-Stack Notes Management Application
 
 A modern, full-stack, and containerized web application for note-taking. This project is built with a professional SPA (Single-Page Application) architecture, featuring a React frontend and a NestJS backend, fully orchestrated with Docker.
 
