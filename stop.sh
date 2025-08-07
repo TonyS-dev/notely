@@ -12,7 +12,7 @@ print_message() {
 }
 print_message "🛑 Stopping and cleaning up the Docker environment..." $BLUE
 
-docker-compose down -v
+docker compose down -v
 
 # Clean up unused images
 docker system prune -f
