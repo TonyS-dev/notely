@@ -186,7 +186,7 @@ You can register new accounts directly from the login page or use these default 
 Live URL here:
 
 ```
-http://174.138.72.82:5173
+http://174.138.72.82
 ```
 
 ---
