@@ -2,6 +2,18 @@
 
 A modern, full-stack, and containerized web application for note-taking. This project is built with a professional SPA (Single-Page Application) architecture, featuring a React frontend and a NestJS backend, fully orchestrated with Docker.
 
+---
+
+## 🖥️ Live Demo
+
+Live URL here:
+
+```
+http://174.138.72.82
+```
+
+---
+
 ![App Screenshot](app.png)
 
 ---
@@ -178,16 +190,6 @@ You can register new accounts directly from the login page or use these default 
     - Password: password123
 
 *Note: Passwords are securely hashed using bcrypt before storage.*
-
----
-
-## 🖥️ Live Demo
-
-Live URL here:
-
-```
-http://174.138.72.82
-```
 
 ---
 
