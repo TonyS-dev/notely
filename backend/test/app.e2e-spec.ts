@@ -58,9 +58,6 @@ describe('App E2E Tests', () => {
     dataSource = app.get(DataSource);
   });
 
-  // --- CHANGED: Use beforeEach to set up a fresh state for each test ---
-  // This hook runs before every single test (`it` block).
-  // This guarantees that our user and token are always valid for the test being run.
   beforeEach(async () => {
     // 1. Clean the database BEFORE each test to ensure a clean slate.
     const entities = dataSource.entityMetadatas;
@@ -87,10 +84,6 @@ describe('App E2E Tests', () => {
     authToken = (loginResponse.body as LoginResponse).access_token;
   });
 
-  // REMOVED: The afterEach hook is no longer needed here because
-  // the database is cleaned at the start of the beforeEach hook.
-  // Keeping it would be redundant.
-
   afterAll(async () => {
     await dataSource.destroy();
     await app.close();
@@ -98,7 +91,7 @@ describe('App E2E Tests', () => {
 
   // -- Test Group for Authentication and Users --
   describe('Authentication and Users', () => {
-    // This test now runs in isolation, with its own fresh database state.
+    // This test runs in isolation, with its own fresh database state.
     it('should register a new user successfully', () => {
       return request(app.getHttpServer() as http.Server)
         .post('/users')
@@ -114,7 +107,6 @@ describe('App E2E Tests', () => {
         });
     });
 
-    // ... other auth tests remain the same
     it('should fail to register a user with a duplicate email', async () => {
       // The user 'testuser@e2e.com' already exists from the beforeEach hook.
       return request(app.getHttpServer() as http.Server)
@@ -128,7 +120,7 @@ describe('App E2E Tests', () => {
     });
 
     it('should log in a registered user and return a JWT', async () => {
-      // We can just verify the login for the user created in beforeEach
+      // Verify the login for the user created in beforeEach
       return request(app.getHttpServer() as http.Server)
         .post('/auth/login')
         .send({ email: 'testuser@e2e.com', password: 'password123' })
@@ -155,7 +147,7 @@ describe('App E2E Tests', () => {
         .expect(401);
     });
 
-    // This test will now use the fresh authToken from beforeEach and should pass.
+    // Test Note Creation
     it('should allow a logged-in user to create a note', () => {
       return request(app.getHttpServer() as http.Server)
         .post('/notes')
@@ -168,7 +160,7 @@ describe('App E2E Tests', () => {
         });
     });
 
-    // This test will also use its own fresh state and should pass.
+    // Test Note Update
     it('should correctly update a note, including its categories, and return 200 OK', async () => {
       const category1Res = await request(app.getHttpServer() as http.Server)
         .post('/categories')
